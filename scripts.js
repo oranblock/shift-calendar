@@ -1,4 +1,4 @@
-const shifts = ['B', 'A', 'C', 'D'];
+const shifts = ['B', 'C', 'A', 'D'];
 let currentDate = new Date();
 let holidays = [];
 
