@@ -1,20 +1,20 @@
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #fff;
     color: #333;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 #calendar-container {
     max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
+    margin: auto;
     padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
 }
 
 #controls {
@@ -24,33 +24,51 @@ body {
     margin-bottom: 20px;
 }
 
+#controls button, #controls input {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#controls button:hover, #controls input:hover {
+    background-color: #f0f0f0;
+}
+
+#current-month-year {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 th, td {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 th {
-    background-color: #f4f4f4;
+    background-color: #f2f2f2;
 }
 
 .shift-a {
-    background-color: #ffcccc;
+    background-color: #e6f7ff;
 }
 
 .shift-b {
-    background-color: #ccffcc;
+    background-color: #ffccff;
 }
 
 .shift-c {
-    background-color: #ccccff;
+    background-color: #e6ffe6;
 }
 
 .shift-d {
@@ -58,81 +76,91 @@ th {
 }
 
 .holiday {
-    background-color: #ffe4e1 !important;
-    font-weight: bold;
-}
-
-td:hover {
-    background-color: #e0e0e0;
-}
-
-#shift-info {
-    margin-top: 20px;
-}
-
-button {
-    margin: 5px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #333;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #555;
-}
-
-#current-month-year {
-    font-size: 1.2em;
-    font-weight: bold;
+    background-color: #ffdddd;
 }
 
 .dark-mode {
-    background-color: #333;
-    color: #fff;
+    background-color: #2e2e2e;
+    color: #dcdcdc;
 }
 
-.dark-mode th, .dark-mode td {
+.dark-mode #calendar-container {
+    background-color: #3e3e3e;
     border-color: #555;
 }
 
 .dark-mode th {
+    background-color: #4e4e4e;
+}
+
+.dark-mode td, .dark-mode th {
+    border-color: #666;
+}
+
+.dark-mode button, .dark-mode input {
     background-color: #555;
+    color: #fff;
+    border-color: #666;
+}
+
+.dark-mode button:hover, .dark-mode input:hover {
+    background-color: #666;
 }
 
 .dark-mode .shift-a {
-    background-color: #ff9999;
+    background-color: #66b2ff;
 }
 
 .dark-mode .shift-b {
-    background-color: #99ff99;
+    background-color: #ff99ff;
 }
 
 .dark-mode .shift-c {
-    background-color: #9999ff;
+    background-color: #66ff66;
 }
 
 .dark-mode .shift-d {
-    background-color: #ffff99;
+    background-color: #ffff66;
 }
 
-input[type="file"] {
+.dark-mode .holiday {
+    background-color: #ff6666;
+}
+
+.modal {
     display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
 }
 
-input[type="file"] + label {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
-    border-radius: 5px;
-    margin: 5px;
-}
-
-input[type="file"] + label:hover {
-    background-color: #555;
 }
