@@ -1,4 +1,4 @@
-const shifts = ['B', 'C', 'A', 'D'];
+const shifts = ['A', 'B', 'C', 'D'];
 let currentDate = new Date();
 let holidays = [];
 
@@ -22,7 +22,7 @@ function loadCalendar() {
         const cell = document.createElement('td');
         const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         const dayOffset = (firstDay.getDay() + day - 1) % 7;
-        const shiftIndex = Math.floor((dayOffset + firstDay.getDay()) / 2) % shifts.length;
+        const shiftIndex = Math.floor(dayOffset / 2) % shifts.length;
         cell.className = `shift-${shifts[shiftIndex].toLowerCase()}`;
 
         if (holidays.includes(cellDate.toISOString().split('T')[0])) {
@@ -71,7 +71,7 @@ function showPreviousShift() {
 }
 
 function getShiftByDate(date) {
-    const shiftIndex = (Math.floor(date.getTime() / (2 * 24 * 60 * 60 * 1000))) % shifts.length;
+    const shiftIndex = Math.floor(date.getTime() / (2 * 24 * 60 * 60 * 1000)) % shifts.length;
     return shifts[shiftIndex];
 }
 
@@ -88,12 +88,12 @@ function fetchHolidays() {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            holidays = data.response.holidays.map(holiday => holiday.date.iso); // Adjust according to API response format
+            holidays = data.response.holidays.map(holiday => holiday.date.iso);
             loadCalendar();
         })
         .catch(error => {
             console.error('Error fetching holidays:', error);
-            loadCalendar(); // Load calendar even if fetching holidays fails
+            loadCalendar();
         });
 }
 
@@ -138,12 +138,27 @@ function importShifts() {
 }
 
 function applyImportedShifts(shiftsData) {
-    // Example of processing imported shifts
     shiftsData.forEach(shift => {
         // Apply shift data to calendar
         // The format and application depend on the JSON structure
     });
     loadCalendar();
+}
+
+function reorderShifts(index1, index2) {
+    if (index1 >= 0 && index1 < shifts.length && index2 >= 0 && index2 < shifts.length) {
+        const temp = shifts[index1];
+        shifts[index1] = shifts[index2];
+        shifts[index2] = temp;
+        loadCalendar();
+    }
+}
+
+function applyShiftReorder() {
+    const shift1 = document.getElementById('shift1').value;
+    const shift2 = document.getElementById('shift2').value;
+    reorderShifts(parseInt(shift1), parseInt(shift2));
+    document.getElementById('settings-modal').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
