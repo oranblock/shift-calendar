@@ -106,15 +106,6 @@ function jumpToDate() {
     }
 }
 
-function jumpToDate() {
-    const datePicker = document.getElementById('date-picker');
-    const selectedDate = new Date(datePicker.value);
-    if (!isNaN(selectedDate.getTime())) {
-        currentDate = selectedDate;
-        loadCalendar();
-    }
-}
-
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
 }
