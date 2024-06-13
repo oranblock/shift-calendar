@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div id="calendar-container">
+        <h1>Shift Calendar</h1>
+        <div id="controls">
+            <button onclick="showPreviousMonth()">Previous Month</button>
+            <input type="month" id="date-picker" onchange="jumpToDate()">
+            <button onclick="showNextMonth()">Next Month</button>
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+        <table id="calendar">
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body">
+            </tbody>
+        </table>
+        <div id="shift-info">
+            <button onclick="showCurrentShift()">Current Shift</button>
+            <button onclick="showNextShift()">Next Shift</button>
+            <button onclick="showPreviousShift()">Previous Shift</button>
+            <p id="shift-display"></p>
+        </div>
+        <button onclick="exportCalendar()">Export Calendar</button>
+        <input type="file" id="import-file" onchange="importShifts()">
+        <label for="import-file">Choose file</label>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
