@@ -1,6 +1,26 @@
-const shifts = ['A', 'B', 'C', 'D'];
+const initialShifts = [
+    { morning: 'D', night: 'B' },
+    { morning: 'C', night: 'D' },
+    { morning: 'A', night: 'C' },
+    { morning: 'B', night: 'A' },
+    { morning: 'D', night: 'B' },
+    { morning: 'C', night: 'D' },
+    { morning: 'A', night: 'C' },
+    { morning: 'B', night: 'A' }
+];
+
+let shifts = [...initialShifts];
 let currentDate = new Date();
 let holidays = [];
+let holidayDescriptions = {};
+let shiftColors = {
+    A: '#e6f7ff',
+    B: '#ffccff',
+    C: '#e6ffe6',
+    D: '#ffffcc'
+};
+let showOffDays = true; // Option to show off days
+let userShift = 'A'; // User selected shift
 
 function loadCalendar() {
     const monthYear = document.getElementById('current-month-year');
@@ -18,31 +38,74 @@ function loadCalendar() {
         row.appendChild(cell);
     }
 
+    let shiftCounter = 0;
+
     for (let day = 1; day <= lastDay.getDate(); day++) {
         const cell = document.createElement('td');
         const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        const dayOffset = (firstDay.getDay() + day - 1) % 7;
-        const shiftIndex = Math.floor(dayOffset / 2) % shifts.length;
-        cell.className = `shift-${shifts[shiftIndex].toLowerCase()}`;
+        let content = '';
+
+        let shiftPatternIndex = (shiftCounter % shifts.length);
+        let morningShift = shifts[shiftPatternIndex].morning;
+        let nightShift = shifts[shiftPatternIndex].night;
+
+        // Check if it's an off day for the current user shift
+        let isOffDay = (morningShift !== userShift && nightShift !== userShift);
+
+        if (showOffDays || !isOffDay) {
+            content = `<div class="shift-block" style="background-color: ${shiftColors[morningShift]}">
+                            <span>${day} Morning: ${morningShift}</span>
+                       </div>
+                       <div class="shift-block" style="background-color: ${shiftColors[nightShift]}">
+                            <span>${day} Night: ${nightShift}</span>
+                       </div>`;
+        }
 
         if (holidays.includes(cellDate.toISOString().split('T')[0])) {
             cell.classList.add('holiday');
             cell.title = "Holiday";
+            if (holidayDescriptions[cellDate.toISOString().split('T')[0]]) {
+                cell.title = holidayDescriptions[cellDate.toISOString().split('T')[0]];
+            }
         }
 
-        cell.textContent = day;
-        cell.addEventListener('click', () => showShiftDetails(day, shifts[shiftIndex]));
+        cell.innerHTML = content;
+        cell.addEventListener('click', () => showShiftDetails(day, morningShift, 'morning', nightShift, 'night'));
         row.appendChild(cell);
 
         if (cellDate.getDay() === 6) {
             calendarBody.appendChild(row);
             row = document.createElement('tr');
         }
+
+        shiftCounter++;
     }
 
     if (row.children.length > 0) {
         calendarBody.appendChild(row);
     }
+
+    displayShifts();
+    displayHolidayLegend();
+}
+
+function displayShifts() {
+    const currentShift = getShiftByDate(new Date());
+    const nextShift = getShiftByDate(new Date(new Date().getTime() + 12 * 60 * 60 * 1000)); // Next shift in 12 hours
+    const prevShift = getShiftByDate(new Date(new Date().getTime() - 12 * 60 * 60 * 1000)); // Previous shift in 12 hours
+
+    document.getElementById('current-shift-display').textContent = `Current Shift: ${currentShift}`;
+    document.getElementById('next-shift-display').textContent = `Next Shift: ${nextShift}`;
+    document.getElementById('previous-shift-display').textContent = `Previous Shift: ${prevShift}`;
+}
+
+function getShiftByDate(date) {
+    const totalDays = Math.floor(date.getTime() / (24 * 60 * 60 * 1000));
+    const cycleDay = totalDays % shifts.length;
+    const shiftIndex = cycleDay < 0 ? shifts.length + cycleDay : cycleDay;
+    const shiftPeriod = (date.getHours() >= 7 && date.getHours() < 19) ? 'morning' : 'night';
+    const shift = shifts[shiftIndex][shiftPeriod];
+    return `${shift} ${shiftPeriod}`;
 }
 
 function showPreviousMonth() {
@@ -55,28 +118,8 @@ function showNextMonth() {
     loadCalendar();
 }
 
-function showCurrentShift() {
-    const currentShift = getShiftByDate(new Date());
-    document.getElementById('shift-display').textContent = `Current Shift: ${currentShift}`;
-}
-
-function showNextShift() {
-    const nextShift = getShiftByDate(new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000));
-    document.getElementById('shift-display').textContent = `Next Shift: ${nextShift}`;
-}
-
-function showPreviousShift() {
-    const prevShift = getShiftByDate(new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000));
-    document.getElementById('shift-display').textContent = `Previous Shift: ${prevShift}`;
-}
-
-function getShiftByDate(date) {
-    const shiftIndex = Math.floor(date.getTime() / (2 * 24 * 60 * 60 * 1000)) % shifts.length;
-    return shifts[shiftIndex];
-}
-
-function showShiftDetails(day, shift) {
-    alert(`Day: ${day}\nShift: ${shift}`);
+function showShiftDetails(day, morningShift, morningPeriod, nightShift, nightPeriod) {
+    alert(`Day: ${day}\nMorning Shift: ${morningShift}\nNight Shift: ${nightShift}`);
 }
 
 function fetchHolidays() {
@@ -89,12 +132,27 @@ function fetchHolidays() {
         .then(response => response.json())
         .then(data => {
             holidays = data.response.holidays.map(holiday => holiday.date.iso);
+            holidayDescriptions = data.response.holidays.reduce((acc, holiday) => {
+                acc[holiday.date.iso] = holiday.description;
+                return acc;
+            }, {});
             loadCalendar();
         })
         .catch(error => {
             console.error('Error fetching holidays:', error);
             loadCalendar();
         });
+}
+
+function displayHolidayLegend() {
+    const holidayList = document.getElementById('holiday-list');
+    holidayList.innerHTML = '';
+
+    holidays.forEach(date => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${date}: ${holidayDescriptions[date]}`;
+        holidayList.appendChild(listItem);
+    });
 }
 
 function jumpToDate() {
@@ -108,6 +166,16 @@ function jumpToDate() {
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
+}
+
+function toggleShowOffDays() {
+    showOffDays = !showOffDays;
+    loadCalendar();
+}
+
+function setUserShift(shift) {
+    userShift = shift;
+    loadCalendar();
 }
 
 function exportCalendar() {
@@ -145,19 +213,31 @@ function applyImportedShifts(shiftsData) {
     loadCalendar();
 }
 
-function reorderShifts(index1, index2) {
-    if (index1 >= 0 && index1 < shifts.length && index2 >= 0 && index2 < shifts.length) {
-        const temp = shifts[index1];
-        shifts[index1] = shifts[index2];
-        shifts[index2] = temp;
-        loadCalendar();
-    }
+function reorderShifts() {
+    shifts = reorderShiftArray(shifts);
+    loadCalendar();
 }
 
-function applyShiftReorder() {
-    const shift1 = document.getElementById('shift1').value;
-    const shift2 = document.getElementById('shift2').value;
-    reorderShifts(parseInt(shift1), parseInt(shift2));
+function reorderShiftArray(shifts) {
+    const reorderedShifts = [...shifts];
+    const lastElement = reorderedShifts.pop();
+    reorderedShifts.unshift(lastElement);
+    return reorderedShifts;
+}
+
+function applyShiftColors() {
+    shiftColors.A = document.getElementById('color-a').value;
+    shiftColors.B = document.getElementById('color-b').value;
+    shiftColors.C = document.getElementById('color-c').value;
+    shiftColors.D = document.getElementById('color-d').value;
+    loadCalendar();
+}
+
+function openSettingsModal() {
+    document.getElementById('settings-modal').style.display = 'block';
+}
+
+function closeSettingsModal() {
     document.getElementById('settings-modal').style.display = 'none';
 }
 
