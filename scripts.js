@@ -30,7 +30,7 @@ let userShift = 'A'; // User selected shift
 let userId = ''; // User ID for chat
 
 // Connect to the WebSocket server
-const ws = new WebSocket('wss://<YOUR_HEROKU_APP_NAME>.herokuapp.com');
+const ws = new WebSocket('wss://chatit.herokuapp.com');
 
 ws.onopen = () => {
     console.log('Connected to the WebSocket server');
