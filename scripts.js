@@ -90,9 +90,17 @@ function loadCalendar() {
 }
 
 function displayShifts() {
-    const currentShift = getShiftByDate(new Date());
-    const nextShift = getShiftByDate(new Date(new Date().getTime() + 12 * 60 * 60 * 1000)); // Next shift in 12 hours
-    const prevShift = getShiftByDate(new Date(new Date().getTime() - 12 * 60 * 60 * 1000)); // Previous shift in 12 hours
+    const now = new Date();
+    const currentShift = getShiftByDate(now);
+    
+    const nextShiftDate = (now.getHours() >= 7 && now.getHours() < 19) ? 
+        new Date(now.setHours(19, 0, 0, 0)) : new Date(now.setHours(7, 0, 0, 0));
+    
+    const prevShiftDate = (now.getHours() >= 7 && now.getHours() < 19) ? 
+        new Date(now.setHours(7, 0, 0, 0)) : new Date(now.setHours(19, 0, 0, 0));
+    
+    const nextShift = getShiftByDate(nextShiftDate);
+    const prevShift = getShiftByDate(prevShiftDate);
 
     document.getElementById('current-shift-display').textContent = `Current Shift: ${currentShift}`;
     document.getElementById('next-shift-display').textContent = `Next Shift: ${nextShift}`;
@@ -103,7 +111,8 @@ function getShiftByDate(date) {
     const totalDays = Math.floor(date.getTime() / (24 * 60 * 60 * 1000));
     const cycleDay = totalDays % shifts.length;
     const shiftIndex = cycleDay < 0 ? shifts.length + cycleDay : cycleDay;
-    const shiftPeriod = (date.getHours() >= 7 && date.getHours() < 19) ? 'morning' : 'night';
+    const hour = date.getHours();
+    const shiftPeriod = (hour >= 7 && hour < 19) ? 'morning' : 'night';
     const shift = shifts[shiftIndex][shiftPeriod];
     return `${shift} ${shiftPeriod}`;
 }
@@ -240,7 +249,21 @@ function openSettingsModal() {
 function closeSettingsModal() {
     document.getElementById('settings-modal').style.display = 'none';
 }
-
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     fetchHolidays();
+    loadCalendar();
 });
+
+document.getElementById('prev-month').addEventListener('click', showPreviousMonth);
+document.getElementById('next-month').addEventListener('click', showNextMonth);
+document.getElementById('toggle-dark-mode').addEventListener('click', toggleDarkMode);
+document.getElementById('toggle-off-days').addEventListener('click', toggleShowOffDays);
+document.getElementById('set-shift').addEventListener('change', (event) => setUserShift(event.target.value));
+document.getElementById('export-calendar').addEventListener('click', exportCalendar);
+document.getElementById('import-file').addEventListener('change', importShifts);
+document.getElementById('reorder-shifts').addEventListener('click', reorderShifts);
+document.getElementById('apply-colors').addEventListener('click', applyShiftColors);
+document.getElementById('jump-to-date').addEventListener('click', jumpToDate);
+document.getElementById('settings-button').addEventListener('click', openSettingsModal);
+document.getElementById('close-settings-modal').addEventListener('click', closeSettingsModal);
