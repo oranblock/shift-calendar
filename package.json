@@ -1,0 +1,17 @@
+{
+  "name": "shift-calendar",
+  "version": "1.0.0",
+  "description": "Shift calendar with chat functionality",
+  "main": "src/scripts.js",
+  "scripts": {
+    "start": "node src/scripts.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "html2pdf.js": "^0.9.2",
+    "ws": "^7.4.6"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
