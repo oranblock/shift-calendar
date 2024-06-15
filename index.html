@@ -51,32 +51,46 @@
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" style="display:none;">
-        <h2>Settings</h2>
-        <div>
-            <button onclick="reorderShifts()">Reorder Shifts</button>
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettingsModal()">&times;</span>
+            <h2>Settings</h2>
+            <div>
+                <button onclick="reorderShifts()">Reorder Shifts</button>
+            </div>
+            <div>
+                <label for="color-a">Color A:</label>
+                <input type="color" id="color-a" value="#e6f7ff">
+                <label for="color-b">Color B:</label>
+                <input type="color" id="color-b" value="#ffccff">
+                <label for="color-c">Color C:</label>
+                <input type="color" id="color-c" value="#e6ffe6">
+                <label for="color-d">Color D:</label>
+                <input type="color" id="color-d" value="#ffffcc">
+                <button onclick="applyShiftColors()">Apply Colors</button>
+            </div>
+            <div>
+                <label for="user-shift">Your Shift:</label>
+                <select id="user-shift" onchange="setUserShift(this.value)">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div>
+                <label for="shift-a-name">Shift A Name:</label>
+                <input type="text" id="shift-a-name" value="A">
+                <label for="shift-b-name">Shift B Name:</label>
+                <input type="text" id="shift-b-name" value="B">
+                <label for="shift-c-name">Shift C Name:</label>
+                <input type="text" id="shift-c-name" value="C">
+                <label for="shift-d-name">Shift D Name:</label>
+                <input type="text" id="shift-d-name" value="D">
+                <button onclick="applyShiftNames()">Apply Shift Names</button>
+            </div>
+            <button onclick="closeSettingsModal()">Close</button>
         </div>
-        <div>
-            <label for="color-a">Color A:</label>
-            <input type="color" id="color-a" value="#e6f7ff">
-            <label for="color-b">Color B:</label>
-            <input type="color" id="color-b" value="#ffccff">
-            <label for="color-c">Color C:</label>
-            <input type="color" id="color-c" value="#e6ffe6">
-            <label for="color-d">Color D:</label>
-            <input type="color" id="color-d" value="#ffffcc">
-            <button onclick="applyShiftColors()">Apply Colors</button>
-        </div>
-        <div>
-            <label for="user-shift">Your Shift:</label>
-            <select id="user-shift" onchange="setUserShift(this.value)">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-            </select>
-        </div>
-        <button onclick="closeSettingsModal()">Close</button>
     </div>
 
     <script src="scripts.js"></script>
