@@ -59,20 +59,10 @@ th {
     background-color: #f2f2f2;
 }
 
-.shift-a {
-    background-color: #e6f7ff;
-}
-
-.shift-b {
-    background-color: #ffccff;
-}
-
-.shift-c {
-    background-color: #e6ffe6;
-}
-
-.shift-d {
-    background-color: #ffffcc;
+.shift-block {
+    margin: 2px 0;
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .holiday {
@@ -107,24 +97,8 @@ th {
     background-color: #666;
 }
 
-.dark-mode .shift-a {
-    background-color: #66b2ff;
-}
-
-.dark-mode .shift-b {
-    background-color: #ff99ff;
-}
-
-.dark-mode .shift-c {
-    background-color: #66ff66;
-}
-
-.dark-mode .shift-d {
-    background-color: #ffff66;
-}
-
-.dark-mode .holiday {
-    background-color: #ff6666;
+.dark-mode .shift-block {
+    background-color: #2e2e2e;
 }
 
 .modal {
@@ -163,4 +137,40 @@ th {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.shift-a {
+    background-color: #e6f7ff;
+}
+
+.shift-b {
+    background-color: #ffccff;
+}
+
+.shift-c {
+    background-color: #e6ffe6;
+}
+
+.shift-d {
+    background-color: #ffffcc;
+}
+
+.dark-mode .shift-a {
+    background-color: #66b2ff;
+}
+
+.dark-mode .shift-b {
+    background-color: #ff99ff;
+}
+
+.dark-mode .shift-c {
+    background-color: #66ff66;
+}
+
+.dark-mode .shift-d {
+    background-color: #ffff66;
+}
+
+.dark-mode .holiday {
+    background-color: #ff6666;
 }
