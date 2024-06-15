@@ -21,20 +21,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Set Heroku environment variables
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-        HEROKU_OAUTH_ID: ${{ secrets.HEROKU_OAUTH_ID }}
-        HEROKU_OAUTH_SECRET: ${{ secrets.HEROKU_OAUTH_SECRET }}
-      run: |
-        heroku config:set HEROKU_OAUTH_ID=$HEROKU_OAUTH_ID HEROKU_OAUTH_SECRET=$HEROKU_OAUTH_SECRET --app $HEROKU_APP_NAME
-        heroku git:remote -a $HEROKU_APP_NAME
-        git push heroku main
-
     - name: Deploy to Heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
       run: |
+        echo "Deploying to Heroku"
+        git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
         git push heroku main
