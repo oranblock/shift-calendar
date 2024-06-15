@@ -7,10 +7,8 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Handle all GET requests to the root by serving the index.html file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -20,7 +18,6 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         console.log(`Received message: ${message}`);
-        // Broadcast the message to all connected clients
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(message);
