@@ -118,7 +118,8 @@ function getShiftByDate(date) {
     const cycleDay = totalDays % shifts.length;
     const shiftIndex = cycleDay < 0 ? shifts.length + cycleDay : cycleDay;
     const hour = date.getHours();
-    const shiftPeriod = (hour >= 7 && hour < 19) ? 'morning' : 'night';
+    const shiftPeriod = (hour >= 7 && hour < 19)
+    ? 'morning' : 'night';
     const shift = shifts[shiftIndex][shiftPeriod];
     return `${shiftNames[shift]} ${shiftPeriod}`;
 }
@@ -185,11 +186,13 @@ function toggleDarkMode() {
 
 function toggleShowOffDays() {
     showOffDays = !showOffDays;
+    saveSettings();
     loadCalendar();
 }
 
 function setUserShift(shift) {
     userShift = shift;
+    saveSettings();
     loadCalendar();
 }
 
@@ -245,6 +248,7 @@ function applyShiftColors() {
     shiftColors.B = document.getElementById('color-b').value;
     shiftColors.C = document.getElementById('color-c').value;
     shiftColors.D = document.getElementById('color-d').value;
+    saveSettings();
     loadCalendar();
 }
 
@@ -253,6 +257,7 @@ function applyShiftNames() {
     shiftNames.B = document.getElementById('shift-b-name').value;
     shiftNames.C = document.getElementById('shift-c-name').value;
     shiftNames.D = document.getElementById('shift-d-name').value;
+    saveSettings();
     loadCalendar();
 }
 
@@ -266,6 +271,7 @@ function closeSettingsModal() {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+    loadSettings();
     fetchHolidays();
     loadCalendar();
 });
