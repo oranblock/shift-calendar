@@ -27,6 +27,7 @@ let shiftNames = {
 };
 let showOffDays = true; // Option to show off days
 let userShift = 'A'; // User selected shift
+let userId = ''; // User ID for chat
 
 function loadCalendar() {
     const monthYear = document.getElementById('current-month-year');
@@ -118,8 +119,7 @@ function getShiftByDate(date) {
     const cycleDay = totalDays % shifts.length;
     const shiftIndex = cycleDay < 0 ? shifts.length + cycleDay : cycleDay;
     const hour = date.getHours();
-    const shiftPeriod = (hour >= 7 && hour < 19)
-    ? 'morning' : 'night';
+    const shiftPeriod = (hour >= 7 && hour < 19) ? 'morning' : 'night';
     const shift = shifts[shiftIndex][shiftPeriod];
     return `${shiftNames[shift]} ${shiftPeriod}`;
 }
@@ -269,9 +269,69 @@ function closeSettingsModal() {
     document.getElementById('settings-modal').style.display = 'none';
 }
 
-// Event listeners
+function saveUserId() {
+    userId = document.getElementById('user-id').value;
+    localStorage.setItem('userId', userId);
+}
+
+function loadUserId() {
+    const savedUserId = localStorage.getItem('userId');
+    if (savedUserId) {
+        userId = savedUserId;
+        document.getElementById('user-id').value = userId;
+    }
+}
+
+function sendMessage() {
+    const chatInput = document.getElementById('chat-input');
+    const message = chatInput.value;
+    if (message.trim() === '') return;
+
+    const chatWindow = document.getElementById('chat-window');
+    const messageElement = document.createElement('div');
+    messageElement.textContent = `${userId}: ${message}`;
+    chatWindow.appendChild(messageElement);
+    chatInput.value = '';
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function saveSettings() {
+    const settings = {
+        shiftNames: shiftNames,
+        shiftColors: shiftColors,
+        userShift: userShift,
+        showOffDays: showOffDays
+    };
+    localStorage.setItem('shiftCalendarSettings', JSON.stringify(settings));
+}
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem('shiftCalendarSettings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        shiftNames = settings.shiftNames;
+        shiftColors = settings.shiftColors;
+        userShift = settings.userShift;
+        showOffDays = settings.showOffDays;
+
+        // Update the settings modal with the loaded values
+        document.getElementById('shift-a-name').value = shiftNames.A;
+        document.getElementById('shift-b-name').value = shiftNames.B;
+        document.getElementById('shift-c-name').value = shiftNames.C;
+        document.getElementById('shift-d-name').value = shiftNames.D;
+
+        document.getElementById('color-a').value = shiftColors.A;
+        document.getElementById('color-b').value = shiftColors.B;
+        document.getElementById('color-c').value = shiftColors.C;
+        document.getElementById('color-d').value = shiftColors.D;
+
+        document.getElementById('user-shift').value = userShift;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
+    loadUserId();
     fetchHolidays();
     loadCalendar();
 });
