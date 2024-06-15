@@ -1,0 +1,40 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Set Heroku environment variables
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        HEROKU_OAUTH_ID: ${{ secrets.HEROKU_OAUTH_ID }}
+        HEROKU_OAUTH_SECRET: ${{ secrets.HEROKU_OAUTH_SECRET }}
+      run: |
+        heroku config:set HEROKU_OAUTH_ID=$HEROKU_OAUTH_ID HEROKU_OAUTH_SECRET=$HEROKU_OAUTH_SECRET --app $HEROKU_APP_NAME
+        heroku git:remote -a $HEROKU_APP_NAME
+        git push heroku main
+
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      run: |
+        git push heroku main
