@@ -141,12 +141,12 @@ function getShiftByDate(date) {
 
 function showPreviousMonth() {
     currentDate.setMonth(currentDate.getMonth() - 1);
-    loadCalendar();
+    fetchHolidays();
 }
 
 function showNextMonth() {
     currentDate.setMonth(currentDate.getMonth() + 1);
-    loadCalendar();
+    fetchHolidays();
 }
 
 function showShiftDetails(day, morningShift, morningPeriod, nightShift, nightPeriod) {
@@ -157,14 +157,15 @@ function fetchHolidays() {
     const apiKey = '8eq0WDPLXW3OdwgLM2kkT7GAtROKMl0u';
     const country = 'KW';
     const year = currentDate.getFullYear();
-    const url = `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${country}&year=${year}`;
+    const month = currentDate.getMonth() + 1;
+    const url = `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${country}&year=${year}&month=${month}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            holidays = data.response.holidays.map(holiday => holiday.date.iso);
+            holidays = data.response.holidays.map(holiday => holiday.date.iso.split('T')[0]);
             holidayDescriptions = data.response.holidays.reduce((acc, holiday) => {
-                acc[holiday.date.iso] = holiday.description;
+                acc[holiday.date.iso.split('T')[0]] = holiday.description;
                 return acc;
             }, {});
             loadCalendar();
@@ -191,7 +192,7 @@ function jumpToDate() {
     const selectedDate = new Date(datePicker.value);
     if (!isNaN(selectedDate.getTime())) {
         currentDate = selectedDate;
-        loadCalendar();
+        fetchHolidays();
     }
 }
 
@@ -239,10 +240,7 @@ function importShifts() {
 }
 
 function applyImportedShifts(shiftsData) {
-    shiftsData.forEach(shift => {
-        // Apply shift data to calendar
-        // The format and application depend on the JSON structure
-    });
+    shifts = shiftsData;
     loadCalendar();
 }
 
