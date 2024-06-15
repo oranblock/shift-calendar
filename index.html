@@ -8,40 +8,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div id="calendar-container">
-        <h1>Shift Calendar</h1>
-        <div id="controls">
-            <button onclick="showPreviousMonth()">Previous Month</button>
-            <input type="month" id="date-picker" onchange="jumpToDate()">
-            <button onclick="showNextMonth()">Next Month</button>
-            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-            <button onclick="toggleShowOffDays()">Toggle Show Off Days</button>
+    <div id="main-container">
+        <div id="calendar-container">
+            <h1>Shift Calendar</h1>
+            <div id="controls">
+                <button onclick="showPreviousMonth()">Previous Month</button>
+                <input type="month" id="date-picker" onchange="jumpToDate()">
+                <button onclick="showNextMonth()">Next Month</button>
+                <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+                <button onclick="toggleShowOffDays()">Toggle Show Off Days</button>
+            </div>
+            <h2 id="current-month-year"></h2>
+            <table id="calendar">
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+            <div id="shift-info">
+                <p id="current-shift-display"></p>
+                <p id="next-shift-display"></p>
+                <p id="previous-shift-display"></p>
+            </div>
+            <button onclick="exportCalendar()">Export Calendar</button>
+            <input type="file" id="import-file" onchange="importShifts()">
+            <label for="import-file">Choose file</label>
+            <button onclick="openSettingsModal()">Settings</button>
         </div>
-        <h2 id="current-month-year"></h2>
-        <table id="calendar">
-            <thead>
-                <tr>
-                    <th>Sun</th>
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                    <th>Sat</th>
-                </tr>
-            </thead>
-            <tbody id="calendar-body">
-            </tbody>
-        </table>
-        <div id="shift-info">
-            <p id="current-shift-display"></p>
-            <p id="next-shift-display"></p>
-            <p id="previous-shift-display"></p>
+
+        <!-- Chat Window -->
+        <div id="chat-container">
+            <h2>Chat</h2>
+            <div id="chat-window"></div>
+            <input type="text" id="chat-input" placeholder="Enter your message...">
+            <button onclick="sendMessage()">Send</button>
         </div>
-        <button onclick="exportCalendar()">Export Calendar</button>
-        <input type="file" id="import-file" onchange="importShifts()">
-        <label for="import-file">Choose file</label>
-        <button onclick="openSettingsModal()">Settings</button>
     </div>
 
     <!-- Holiday Legend -->
@@ -88,6 +97,11 @@
                 <label for="shift-d-name">Shift D Name:</label>
                 <input type="text" id="shift-d-name" value="D">
                 <button onclick="applyShiftNames()">Apply Shift Names</button>
+            </div>
+            <div>
+                <label for="user-id">User ID:</label>
+                <input type="text" id="user-id" placeholder="Enter your user ID">
+                <button onclick="saveUserId()">Save User ID</button>
             </div>
             <button onclick="closeSettingsModal()">Close</button>
         </div>
