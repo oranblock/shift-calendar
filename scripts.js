@@ -29,6 +29,21 @@ let showOffDays = true; // Option to show off days
 let userShift = 'A'; // User selected shift
 let userId = ''; // User ID for chat
 
+// Connect to the WebSocket server
+const ws = new WebSocket('wss://<YOUR_HEROKU_APP_NAME>.herokuapp.com');
+
+ws.onopen = () => {
+    console.log('Connected to the WebSocket server');
+};
+
+ws.onmessage = (event) => {
+    const chatWindow = document.getElementById('chat-window');
+    const messageElement = document.createElement('div');
+    messageElement.textContent = event.data;
+    chatWindow.appendChild(messageElement);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+};
+
 function loadCalendar() {
     const monthYear = document.getElementById('current-month-year');
     const calendarBody = document.getElementById('calendar-body');
@@ -293,6 +308,9 @@ function sendMessage() {
     chatWindow.appendChild(messageElement);
     chatInput.value = '';
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Send the message to the WebSocket server
+    ws.send(`${userId}: ${message}`);
 }
 
 function saveSettings() {
